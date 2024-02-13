@@ -19,3 +19,5 @@ Paint Brush App with JAVA using JFrame and JPanel.
 "Save": Users can save their artwork as an image file for future reference or sharing.
 
 "Open": Allows users to open existing image files to continue working on them or to start with a reference image.
+
+"Sound Efficts" This app supports Sound Effects.
