@@ -18,10 +18,10 @@ import static org.example.PaintBrushFrame.drawingPanel;
 public class ControlPanel extends JPanel {
     private final JCheckBox dottedCheckbox;
     private final JCheckBox filledCheckbox;
-    private Clip youSavedMe;
-    private static Clip saveMe = null;
-    private static Clip tapHere = null;
-    private static Clip mouseClick = null;
+    private final Clip youSavedMe;
+    private final Clip saveMe;
+    private final Clip tapHere;
+    private final Clip mouseClick;
 
     ControlPanel() {
         youSavedMe = loadSound("src/main/java/org/example/sounds/you-saved-me.wav");
@@ -68,7 +68,19 @@ public class ControlPanel extends JPanel {
         setVisible(true);
 
     }
-    private static Clip loadSound(String soundPath) {
+
+    private static void playSound(Clip clip) {
+        // Handle the case when the sound couldn't be loaded
+        if (clip != null) {
+            clip.setMicrosecondPosition(0);
+            clip.setFramePosition(0);
+            clip.start(); // Play the sound
+        } else {
+            System.out.println("Error loading sound file.");
+        }
+    }
+
+    private Clip loadSound(String soundPath) {
         Clip clip = null;
         try {
             File soundFile = new File(soundPath);
@@ -77,20 +89,12 @@ public class ControlPanel extends JPanel {
             clip.open(audioInputStream);
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             // Log the exception or handle it as needed
-            e.printStackTrace();
+            Logger.getLogger(DrawingPanel.class.getName()).severe("Error saving image: " + e.getMessage());
+            JOptionPane.showMessageDialog(ControlPanel.this, "Error saving image: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
         return clip;
     }
-    private static void playSound(Clip clip) {
-        if (clip != null) {
-            clip.setMicrosecondPosition(0);
-            clip.setFramePosition(0);
-            clip.start(); // Play the sound
-        } else {
-            // Handle the case where the sound couldn't be loaded
-            System.out.println("Error loading sound file.");
-        }
-    }
+
     public JButton createIconButton(String toolTip, String iconFileName, ActionListener listener) {
         ImageIcon icon = new ImageIcon(iconFileName);
         JButton button = new JButton(icon);
@@ -107,8 +111,9 @@ public class ControlPanel extends JPanel {
         button.setBorderPainted(false);
         return button;
     }
+
     // ActionListener for Panel Background Color button
-    private static class PaletteButtonListener implements ActionListener {
+    private class PaletteButtonListener implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -127,12 +132,11 @@ public class ControlPanel extends JPanel {
 
     // ActionListener for Pen Color button
 
-    private static class BrushColorButtonListener implements ActionListener {
+    private class BrushColorButtonListener implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
             playSound(mouseClick);
-            // Create a new JColorChooser
             // Show a color dialog and get the selected color
             Color color = JColorChooser.showDialog(new JFrame(), "Select a color", drawingPanel.getBackground());
             // If the user did not cancel the dialog
@@ -144,8 +148,7 @@ public class ControlPanel extends JPanel {
     }
 
     // ActionListener for Line button
-    private static class LineButtonListener implements ActionListener {
-
+    private class LineButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             playSound(mouseClick);
@@ -154,8 +157,7 @@ public class ControlPanel extends JPanel {
     }
 
     // ActionListener for Rectangle button
-    private static class RectangleButtonListener implements ActionListener {
-
+    private class RectangleButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             playSound(mouseClick);
@@ -164,8 +166,7 @@ public class ControlPanel extends JPanel {
     }
 
     // ActionListener for Oval button
-    private static class OvalButtonListener implements ActionListener {
-
+    private class OvalButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             playSound(mouseClick);
@@ -174,8 +175,7 @@ public class ControlPanel extends JPanel {
     }
 
     // ActionListener for Freehand button
-    private static class FreehandButtonListener implements ActionListener {
-
+    private class FreehandButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
             playSound(mouseClick);
@@ -183,30 +183,27 @@ public class ControlPanel extends JPanel {
         }
     }
 
-    private static class EraserButtonListener implements ActionListener {
+    private class EraserButtonListener implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
             playSound(mouseClick);
             drawingPanel.setCurrentShape(4); // Set the shape to Eraser
             //drawingPanel.setCurrentColor(Color.WHITE); // Set the color to white (eraser color)
-
         }
     }
 
     // ActionListener for Clear All button
-    private static class ClearAllButtonListener implements ActionListener {
-
+    private class ClearAllButtonListener implements ActionListener {
         @Override
         public void actionPerformed(ActionEvent e) {
-
             playSound(saveMe);
             drawingPanel.clearAll();
-
         }
     }
 
-    private static class UndoButtonListener implements ActionListener {
+    // ActionListener for Undo button
+    private class UndoButtonListener implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -216,7 +213,9 @@ public class ControlPanel extends JPanel {
             }
         }
     }
-    private static class TapHereButtonListener implements ActionListener {
+
+    // ActionListener for Tap Here button
+    private class TapHereButtonListener implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
@@ -258,7 +257,6 @@ public class ControlPanel extends JPanel {
             }
         }
     }
-
 
     // Listener for Dotted checkbox
     private class DottedCheckboxListener implements ItemListener {
@@ -318,6 +316,4 @@ public class ControlPanel extends JPanel {
             }
         }
     }
-
-
 }
