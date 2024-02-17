@@ -2,7 +2,10 @@ package org.example;
 
 import javax.swing.*;
 import java.awt.*;
-
+/**
+ *
+ * @author DKRORY
+ */
 
 public class PaintBrushFrame extends JFrame {
     protected static DrawingPanel drawingPanel;

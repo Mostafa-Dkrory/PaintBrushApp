@@ -19,7 +19,7 @@ class DrawingPanel extends JPanel {
     private final ArrayList<Point> erasedPoints = new ArrayList<>();
     private Color currentColor = Color.BLACK;
     private Color lastColor = Color.BLACK;
-    private ShapeType currentShape = ShapeType.LINE;
+    private ShapeType currentShape = ShapeType.FREEHAND;
     private boolean drawing = false;
     private boolean erasing = false;
     private Point startPoint;
