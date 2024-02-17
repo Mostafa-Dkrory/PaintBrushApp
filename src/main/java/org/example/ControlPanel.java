@@ -15,7 +15,12 @@ import java.util.logging.Logger;
 
 import static org.example.PaintBrushFrame.drawingPanel;
 
-public class ControlPanel extends JPanel {
+/**
+ *
+ * @author DKRORY
+ */
+public final class ControlPanel extends JPanel {
+
     private final JCheckBox dottedCheckbox;
     private final JCheckBox filledCheckbox;
     private final Clip youSavedMe;
@@ -24,20 +29,13 @@ public class ControlPanel extends JPanel {
     private final Clip mouseClick;
 
     ControlPanel() {
-        youSavedMe = loadSound("src/main/java/org/example/sounds/you-saved-me.wav");
-        saveMe = loadSound("src/main/java/org/example/sounds/Save mee.wav");
-        tapHere = loadSound("src/main/java/org/example/sounds/john-cena.wav");
-        mouseClick = loadSound("src/main/java/org/example/sounds/mouse-click.wav");
+        youSavedMe = loadSound("you-saved-me.wav");
+        saveMe = loadSound("Save mee.wav");
+        tapHere = loadSound("john-cena.wav");
+        mouseClick = loadSound("mouse-click.wav");
 
         this.setBackground(Color.WHITE);
         // Create buttons for various actions
-        this.add(createIconButton("Panel Background Color", "src/main/java/org/example/icons/palette.png", new PaletteButtonListener()));
-        this.add(createIconButton("Brush Color", "src/main/java/org/example/icons/penPalette.png", new BrushColorButtonListener()));
-
-        this.add(createIconButton("Line", "src/main/java/org/example/icons/line.png", new LineButtonListener()));
-        this.add(createIconButton("Rectangle", "src/main/java/org/example/icons/rec.png", new RectangleButtonListener()));
-        this.add(createIconButton("Oval", "src/main/java/org/example/icons/oval.png", new OvalButtonListener()));
-        this.add(createIconButton("Brush", "src/main/java/org/example/icons/brush.png", new FreehandButtonListener()));
 
         dottedCheckbox = new JCheckBox("Dotted");
         filledCheckbox = new JCheckBox("Filled");
@@ -51,25 +49,31 @@ public class ControlPanel extends JPanel {
         //dottedCheckbox.setPreferredSize(new Dimension(100, 50));
         //filledCheckbox.setPreferredSize(new Dimension(100, 50));
 
+        this.add(createIconButton("Panel Background Color", "palette.png", new PaletteButtonListener()));
+        this.add(createIconButton("Brush Color", "penPalette.png", new BrushColorButtonListener()));
 
-        // Add buttons to the control panel to be organized and take the shape of button not the all screen
+        this.add(createIconButton("Brush", "pen.png", new FreehandButtonListener()));
+        this.add(createIconButton("Line", "line.png", new LineButtonListener()));
+        this.add(createIconButton("Rectangle", "rec.png", new RectangleButtonListener()));
+        this.add(createIconButton("Oval", "oval.png", new OvalButtonListener()));
+
         this.add(dottedCheckbox);
         this.add(filledCheckbox);
 
-        this.add(createIconButton("Eraser", "src/main/java/org/example/icons/eraser.png", new EraserButtonListener()));
-        this.add(createIconButton("Undo", "src/main/java/org/example/icons/undo.png", new UndoButtonListener()));
-        this.add(createIconButton("Clear All", "src/main/java/org/example/icons/clearAll.png", new ClearAllButtonListener()));
+        this.add(createIconButton("Undo", "ctrlZ.png", new UndoButtonListener()));
+        this.add(createIconButton("Eraser", "eraser.png", new EraserButtonListener()));
+        this.add(createIconButton("Clear All", "clearAll.png", new ClearAllButtonListener()));
 
-        this.add(createIconButton("Save", "src/main/java/org/example/icons/save.png", new SaveButtonListener()));
-        this.add(createIconButton("Open", "src/main/java/org/example/icons/open.png", new OpenButtonListener()));
-        this.add(createIconButton("Tap Here", "src/main/java/org/example/icons/tapHere.png", new TapHereButtonListener()));
+        this.add(createIconButton("Save", "save.png", new SaveButtonListener()));
+        this.add(createIconButton("Open", "open.png", new OpenButtonListener()));
+        this.add(createIconButton("Tap Here", "tapHere.png", new TapHereButtonListener()));
 
         // Make the main window visible
         setVisible(true);
 
     }
 
-    private static void playSound(Clip clip) {
+    private void playSound(Clip clip) {
         // Handle the case when the sound couldn't be loaded
         if (clip != null) {
             clip.setMicrosecondPosition(0);
@@ -83,7 +87,7 @@ public class ControlPanel extends JPanel {
     private Clip loadSound(String soundPath) {
         Clip clip = null;
         try {
-            File soundFile = new File(soundPath);
+            File soundFile = new File("src/main/java/org/example/sounds/" + soundPath);
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundFile);
             clip = AudioSystem.getClip();
             clip.open(audioInputStream);
@@ -96,7 +100,7 @@ public class ControlPanel extends JPanel {
     }
 
     public JButton createIconButton(String toolTip, String iconFileName, ActionListener listener) {
-        ImageIcon icon = new ImageIcon(iconFileName);
+        ImageIcon icon = new ImageIcon("src/main/java/org/example/icons/" + iconFileName);
         JButton button = new JButton(icon);
         button.addActionListener(listener);
         // Set a specific size for the button
@@ -125,13 +129,10 @@ public class ControlPanel extends JPanel {
                 // Set the panel background color to the selected color
                 drawingPanel.setBackground(color);
             }
-
         }
     }
 
-
     // ActionListener for Pen Color button
-
     private class BrushColorButtonListener implements ActionListener {
 
         @Override
@@ -149,52 +150,57 @@ public class ControlPanel extends JPanel {
 
     // ActionListener for Line button
     private class LineButtonListener implements ActionListener {
+
         @Override
         public void actionPerformed(ActionEvent e) {
             playSound(mouseClick);
-            drawingPanel.setCurrentShape(0);
+            drawingPanel.setCurrentShape(ShapeType.LINE);
         }
     }
 
     // ActionListener for Rectangle button
     private class RectangleButtonListener implements ActionListener {
+
         @Override
         public void actionPerformed(ActionEvent e) {
             playSound(mouseClick);
-            drawingPanel.setCurrentShape(1);
+            drawingPanel.setCurrentShape(ShapeType.RECTANGLE);
         }
     }
 
     // ActionListener for Oval button
     private class OvalButtonListener implements ActionListener {
+
         @Override
         public void actionPerformed(ActionEvent e) {
             playSound(mouseClick);
-            drawingPanel.setCurrentShape(2);
+            drawingPanel.setCurrentShape(ShapeType.OVAL);
         }
     }
 
     // ActionListener for Freehand button
     private class FreehandButtonListener implements ActionListener {
+
         @Override
         public void actionPerformed(ActionEvent e) {
             playSound(mouseClick);
-            drawingPanel.setCurrentShape(3);
+            drawingPanel.setCurrentShape(ShapeType.FREEHAND);
         }
     }
-
+    // ActionListener for Eraser button
     private class EraserButtonListener implements ActionListener {
 
         @Override
         public void actionPerformed(ActionEvent e) {
             playSound(mouseClick);
-            drawingPanel.setCurrentShape(4); // Set the shape to Eraser
+            drawingPanel.setCurrentShape(ShapeType.ERASE); // Set the shape to Eraser
             //drawingPanel.setCurrentColor(Color.WHITE); // Set the color to white (eraser color)
         }
     }
 
     // ActionListener for Clear All button
     private class ClearAllButtonListener implements ActionListener {
+
         @Override
         public void actionPerformed(ActionEvent e) {
             playSound(saveMe);
@@ -225,6 +231,7 @@ public class ControlPanel extends JPanel {
 
     // ActionListener for Save button
     private class SaveButtonListener implements ActionListener {
+
         @Override
         public void actionPerformed(ActionEvent e) {
 
@@ -317,3 +324,4 @@ public class ControlPanel extends JPanel {
         }
     }
 }
+

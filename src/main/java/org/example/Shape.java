@@ -4,7 +4,16 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
+/**
+ *
+ * @author DKRORY
+ */
+
+enum ShapeType {LINE,RECTANGLE,OVAL,FREEHAND,IMAGE,ERASE}
+
 abstract class Shape {
+    protected Point start;
+    protected Point end;
     protected Color color;
     protected boolean isDotted;
     protected boolean isFilled;
@@ -14,10 +23,6 @@ abstract class Shape {
 
 // Class representing a line shape
 class Line extends Shape {
-
-    private final Point start;
-    private final Point end;
-
     // Constructor for the Line class
     public Line(Point start, Point end, Color color, boolean dotted) {
         this.start = start;
@@ -45,10 +50,6 @@ class Line extends Shape {
 
 // Class representing a rectangle shape
 class Rectangle extends Shape {
-
-    private final Point start;
-    private final Point end;
-
     // Constructor for the Rectangle class
     public Rectangle(Point start, Point end, Color color, boolean dotted, boolean filled) {
         this.start = start;
@@ -89,19 +90,13 @@ class Rectangle extends Shape {
 // Class representing an oval shape
 class Oval extends Shape {
 
-    private final Point start;
-    private final Point end;
-    private final Color color;
-    private final boolean dotted;
-    private final boolean filled;
-
     // Constructor for the Oval class
     public Oval(Point start, Point end, Color color, boolean dotted, boolean filled) {
         this.start = start;
         this.end = end;
         this.color = color;
-        this.dotted = dotted;
-        this.filled = filled;
+        this.isDotted = dotted;
+        this.isFilled = filled;
     }
 
     // Override method to draw the Oval shape on the graphics context
@@ -111,7 +106,7 @@ class Oval extends Shape {
         g2d.setColor(color);
 
         // Set stroke properties based on whether the shape is dotted or solid
-        if (dotted) {
+        if (isDotted) {
             float[] dashPattern = {3, 3};
             g2d.setStroke(new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 2.0f, dashPattern, 0.0f));
         } else {
@@ -124,7 +119,7 @@ class Oval extends Shape {
         int y = Math.min(start.y, end.y);
 
         // Draw either a filled or an outlined oval based on the 'filled' property
-        if (filled) {
+        if (isFilled) {
             g2d.fillOval(x, y, width, height);
         } else {
             g2d.drawOval(x, y, width, height);
@@ -155,14 +150,13 @@ class ImageShape extends Shape {
 class Freehand extends Shape {
 
     private final ArrayList<Point> points;
-    private final Color color;
-    private final boolean dotted;
+
 
     // Constructor for the Freehand class
     public Freehand(ArrayList<Point> points, Color color, boolean dotted) {
         this.points = new ArrayList<>(points);
         this.color = color;
-        this.dotted = dotted;
+        this.isDotted = dotted;
     }
 
     // Override method to draw the Freehand shape on the graphics context
@@ -171,11 +165,11 @@ class Freehand extends Shape {
         Graphics2D g2d = (Graphics2D) g;
         g2d.setColor(color);
         // Set stroke properties based on whether the shape is dotted or solid
-        if (dotted) {
+        if (isDotted) {
             float[] dashPattern = {3, 3};
-            g2d.setStroke(new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 2.0f, dashPattern, 0.0f));
+            g2d.setStroke(new BasicStroke(5, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 2.0f, dashPattern, 0.0f));
         } else {
-            g2d.setStroke(new BasicStroke(2.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1.0f, null, 0.0f));
+            g2d.setStroke(new BasicStroke(5.0f));
         }
         // Draw lines connecting the points to represent the Freehand shape
         for (int i = 1; i < points.size(); i++) {
@@ -188,21 +182,20 @@ class Freehand extends Shape {
 
 class Erase extends Shape {
     private final ArrayList<Point> erasedPoints;
-    private final Color color;
 
     // Constructor for the Freehand class
-    public Erase(ArrayList<Point> points, Color color) {
+    public Erase(ArrayList<Point> points) {
         this.erasedPoints = new ArrayList<>(points);
-        this.color = color;
+
     }
 
-    // Override method to draw the Freehand shape on the graphics context
+    // Override method to Erase
     @Override
     void draw(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
-        g2d.setColor(color);
+        g2d.setColor(PaintBrushFrame.drawingPanel.getBackground());
         // Set stroke properties based on whether the shape is dotted or solid
-        g2d.setStroke(new BasicStroke(20.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1.0f, null, 0.0f));
+        g2d.setStroke(new BasicStroke(20.0f));
         // Draw lines connecting the points to represent the Freehand shape
         for (int i = 1; i < erasedPoints.size(); i++) {
             Point p1 = erasedPoints.get(i - 1);
@@ -211,6 +204,8 @@ class Erase extends Shape {
         }
     }
 }
+
+/*
 
 // Class representing an Eraser shape (extends Rectangle)
 class Eraser extends Rectangle {
@@ -223,8 +218,11 @@ class Eraser extends Rectangle {
     @Override
     void draw(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
+        g2d.setColor(drawingPanel.getBackground());
         super.draw(g2d);
 
 
     }
 }
+
+*/
