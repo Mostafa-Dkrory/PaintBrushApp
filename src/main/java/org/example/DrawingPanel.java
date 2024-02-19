@@ -8,7 +8,6 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 /**
- *
  * @author DKRORY
  */
 class DrawingPanel extends JPanel {
@@ -20,8 +19,7 @@ class DrawingPanel extends JPanel {
     private Color currentColor = Color.BLACK;
     private Color lastColor = Color.BLACK;
     private ShapeType currentShape = ShapeType.FREEHAND;
-    private boolean drawing = false;
-    private boolean erasing = false;
+    private boolean isDrawing = false;
     private Point startPoint;
     private Point endPoint;
     private boolean isDotted = false;
@@ -41,12 +39,11 @@ class DrawingPanel extends JPanel {
 
                 switch (currentShape) {
                     case FREEHAND -> {
-                        drawing = true;
+                        isDrawing = true;
                         freehandPoints.clear();
                         freehandPoints.add(startPoint);
                     }
                     case ERASE -> {
-                        erasing = true;
                         erasedPoints.clear();
                         erasedPoints.add(startPoint);
                     }
@@ -60,12 +57,11 @@ class DrawingPanel extends JPanel {
 
                 switch (currentShape) {
                     case FREEHAND -> {
-                        drawing = false;
+                        isDrawing = false;
                         shapes.add(new Freehand(freehandPoints, currentColor, isDotted));
                         freehandPoints.clear();  // Clear the points after adding the Freehand shape
                     }
                     case ERASE -> {
-                        erasing = false;
                         shapes.add(new Erase(erasedPoints));
                         erasedPoints.clear();
                         currentColor = lastColor;
@@ -84,16 +80,14 @@ class DrawingPanel extends JPanel {
                 endPoint = e.getPoint();
                 switch (currentShape) {
                     case FREEHAND -> {
-                        if (drawing) {
+                        if (isDrawing) {
                             freehandPoints.add(endPoint);
                             repaint();
                         }
                     }
                     case ERASE -> {
-                        if (erasing) {
-                            erasedPoints.add(endPoint);
-                            repaint();
-                        }
+                        erasedPoints.add(endPoint);
+                        repaint();
                     }
                     default -> {
                         // For other shapes --> add and remove the shape while dragging
@@ -119,9 +113,6 @@ class DrawingPanel extends JPanel {
                     new Rectangle(start, end, color, dotted, filled);
             case OVAL -> //Oval
                     new Oval(start, end, color, dotted, filled);
-            case ERASE -> //Eraser
-                //new Eraser(start, end, getBackground());
-                    new Erase(erasedPoints);
             default -> null;
         };
     }
@@ -173,7 +164,7 @@ class DrawingPanel extends JPanel {
         for (Shape shape : shapes) {
             shape.draw(g);
         }
-        if (drawing && currentShape == ShapeType.FREEHAND) {
+        if (isDrawing && currentShape == ShapeType.FREEHAND) {
             Graphics2D g2d = (Graphics2D) g;
             g2d.setColor(currentColor);
             if (isDotted) {
@@ -188,7 +179,7 @@ class DrawingPanel extends JPanel {
                 g2d.drawLine(p1.x, p1.y, p2.x, p2.y);
             }
         }
-        if (erasing && currentShape == ShapeType.ERASE) {
+        if (currentShape == ShapeType.ERASE) {
             Graphics2D g2d = (Graphics2D) g;
 
             //g2d.setStroke(new BasicStroke());

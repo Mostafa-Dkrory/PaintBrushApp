@@ -5,11 +5,10 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 /**
- *
  * @author DKRORY
  */
 
-enum ShapeType {LINE,RECTANGLE,OVAL,FREEHAND,IMAGE,ERASE}
+enum ShapeType {LINE, RECTANGLE, OVAL, FREEHAND, ERASE}
 
 abstract class Shape {
     protected Point start;
@@ -42,7 +41,7 @@ class Line extends Shape {
             float[] dashPattern = {3, 3};
             g2d.setStroke(new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 2.0f, dashPattern, 0.0f));
         } else {
-            g2d.setStroke(new BasicStroke(2.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1.0f, null, 0.0f));
+            g2d.setStroke(new BasicStroke(2.0f));
         }
         g2d.drawLine(start.x, start.y, end.x, end.y);
     }
@@ -70,7 +69,7 @@ class Rectangle extends Shape {
             float[] dashPattern = {3, 3};
             g2d.setStroke(new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 2.0f, dashPattern, 0.0f));
         } else {
-            g2d.setStroke(new BasicStroke(2.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1.0f, null, 0.0f));
+            g2d.setStroke(new BasicStroke(2.0f));
         }
 
         int width = Math.abs(end.x - start.x);
@@ -110,7 +109,7 @@ class Oval extends Shape {
             float[] dashPattern = {3, 3};
             g2d.setStroke(new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 2.0f, dashPattern, 0.0f));
         } else {
-            g2d.setStroke(new BasicStroke(2.0f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 1.0f, null, 0.0f));
+            g2d.setStroke(new BasicStroke(2.0f));
         }
 
         int width = Math.abs(end.x - start.x);
@@ -183,10 +182,9 @@ class Freehand extends Shape {
 class Erase extends Shape {
     private final ArrayList<Point> erasedPoints;
 
-    // Constructor for the Freehand class
+    // Constructor for the Erase class
     public Erase(ArrayList<Point> points) {
         this.erasedPoints = new ArrayList<>(points);
-
     }
 
     // Override method to Erase

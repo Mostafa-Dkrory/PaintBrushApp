@@ -34,9 +34,9 @@ public final class ControlPanel extends JPanel {
         tapHere = loadSound("john-cena.wav");
         mouseClick = loadSound("mouse-click.wav");
 
-        this.setBackground(Color.WHITE);
-        // Create buttons for various actions
 
+
+        // Create buttons for various actions
         dottedCheckbox = new JCheckBox("Dotted");
         filledCheckbox = new JCheckBox("Filled");
         dottedCheckbox.addItemListener(new DottedCheckboxListener());
@@ -46,8 +46,6 @@ public final class ControlPanel extends JPanel {
         filledCheckbox.setFont(checkboxFont);
         dottedCheckbox.setBackground(Color.WHITE);
         filledCheckbox.setBackground(Color.WHITE);
-        //dottedCheckbox.setPreferredSize(new Dimension(100, 50));
-        //filledCheckbox.setPreferredSize(new Dimension(100, 50));
 
         this.add(createIconButton("Panel Background Color", "palette.png", new PaletteButtonListener()));
         this.add(createIconButton("Brush Color", "penPalette.png", new BrushColorButtonListener()));
@@ -68,8 +66,8 @@ public final class ControlPanel extends JPanel {
         this.add(createIconButton("Open", "open.png", new OpenButtonListener()));
         this.add(createIconButton("Tap Here", "tapHere.png", new TapHereButtonListener()));
 
-        // Make the main window visible
-        setVisible(true);
+        this.setBackground(Color.WHITE);
+        this.setVisible(true);
 
     }
 
@@ -180,7 +178,6 @@ public final class ControlPanel extends JPanel {
 
     // ActionListener for Freehand button
     private class FreehandButtonListener implements ActionListener {
-
         @Override
         public void actionPerformed(ActionEvent e) {
             playSound(mouseClick);
@@ -189,7 +186,6 @@ public final class ControlPanel extends JPanel {
     }
     // ActionListener for Eraser button
     private class EraserButtonListener implements ActionListener {
-
         @Override
         public void actionPerformed(ActionEvent e) {
             playSound(mouseClick);
@@ -222,7 +218,6 @@ public final class ControlPanel extends JPanel {
 
     // ActionListener for Tap Here button
     private class TapHereButtonListener implements ActionListener {
-
         @Override
         public void actionPerformed(ActionEvent e) {
             playSound(tapHere);
@@ -267,7 +262,6 @@ public final class ControlPanel extends JPanel {
 
     // Listener for Dotted checkbox
     private class DottedCheckboxListener implements ItemListener {
-
         @Override
         public void itemStateChanged(ItemEvent e) {
             playSound(mouseClick);
@@ -324,4 +318,3 @@ public final class ControlPanel extends JPanel {
         }
     }
 }
-

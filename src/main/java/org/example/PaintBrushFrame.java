@@ -15,7 +15,7 @@ public class PaintBrushFrame extends JFrame {
         this.setTitle("Paint Brush App");
         this.setSize(1300, 750);
         this.setLocationRelativeTo(null);  //centers the frame on the screen.
-        //this.setExtendedState(JFrame.MAXIMIZED_BOTH); //set the frame to maximize both vertically and horizontally.
+        this.setExtendedState(JFrame.MAXIMIZED_BOTH); //set the frame to maximize both vertically and horizontally.
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
 
         // Create a Control Panel and add it to our Frame.
